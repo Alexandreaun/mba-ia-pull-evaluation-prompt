@@ -16,9 +16,15 @@ from dotenv import load_dotenv
 from langchain import hub
 from langchain_core.prompts import ChatPromptTemplate
 from utils import load_yaml, check_env_vars, print_section_header
+from prompt_registry import registry
+from langsmith import Client
 
 load_dotenv()
 
+prompt = registry.get_prompt("bug-to-user-story")
+prompt_template = load_prompt(prompt.path)
+
+client = Client()
 
 def push_prompt_to_langsmith(prompt_name: str, prompt_data: dict) -> bool:
     """
@@ -31,7 +37,17 @@ def push_prompt_to_langsmith(prompt_name: str, prompt_data: dict) -> bool:
     Returns:
         True se sucesso, False caso contrário
     """
-    ...
+    url = client.push_prompt(
+    "bug-to-user-story", 
+    object=prompt_template, 
+    tags=[
+        f"v{prompt.version}",
+        f"model: {prompt.model}",
+    ], 
+    description=prompt.description
+)
+
+return url is not None
 
 
 def validate_prompt(prompt_data: dict) -> tuple[bool, list]:
@@ -48,8 +64,12 @@ def validate_prompt(prompt_data: dict) -> tuple[bool, list]:
 
 
 def main():
-    """Função principal"""
-    ...
+    is_valid, errors = validate_prompt(prompt_template)
+    if is_valid:
+        push_prompt_to_langsmith(prompt.name, prompt_template)
+        print(f"Prompt enviado com sucesso ao LangSmith Hub")
+    else:
+        print(f"Erros encontrados: {errors}")
 
 
 if __name__ == "__main__":
