@@ -1,5 +1,6 @@
+agents:  
   bug-to-user-story:
-    description: "Agente que ajuda a transformar relatos de bugs de usuários em tarefas para desenvolvedores."
+    description: "Agente para transformar relatos de bugs em tarefas estruturadas para desenvolvedores usando User Stories e BDD."
     current_version: "1.0.0"
     path: "prompts/bug-to-user-story_v2.yml"
     model: gpt-5-nano
