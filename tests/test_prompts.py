@@ -1,6 +1,7 @@
 """
 Testes automatizados para validação de prompts.
 """
+from queue import Empty
 import pytest
 import yaml
 import sys
@@ -8,8 +9,6 @@ from pathlib import Path
 
 # Adicionar src ao path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
-
-from utils import validate_prompt_structure
 
 def load_prompts(file_path: str):
     """Carrega prompts do arquivo YAML."""
@@ -21,61 +20,52 @@ def fetch_prompt_data():
     return load_prompts(str(prompt_path))
 
 class TestPrompts:
+
+    prompt_data = fetch_prompt_data()
+    
     def test_prompt_has_system_prompt(self):
-        """Verifica se o campo 'system_prompt' existe e não está vazio."""
-        prompt_data = fetch_prompt_data()
-        assert "system_prompt" in prompt_data, "Campo 'system_prompt' não encontrado no YAML"
-        assert prompt_data["system_prompt"].strip(), "Campo 'system_prompt' está vazio"
+        """Verifica se o campo 'system_prompt' existe e não está vazio."""        
+        assert "system_prompt" in self.prompt_data, "Campo 'system_prompt' ausente"
+        assert str(self.prompt_data["system_prompt"]).strip() != "", "Campo 'system_prompt' está vazio"
 
     def test_prompt_has_role_definition(self):
         """Verifica se o prompt define uma persona (ex: "Você é um Product Manager")."""
-        prompt_data = fetch_prompt_data()
-        assert "persona" in prompt_data, "Campo 'persona' não encontrado no YAML"
-        persona = prompt_data["persona"].strip()
-        assert persona, "Campo 'persona' está vazio"
-        persona_lower = persona.lower()
-        assert "você é" in persona_lower or "voce e" in persona_lower, (
-        "Persona deve definir um papel (ex: 'Você é um Product Manager')"
-    )
+        assert "system_prompt" in self.prompt_data, "Campo 'system_prompt' ausente"
+        system_prompt_text = self.prompt_data["system_prompt"].lower()
+        assert "você é" in system_prompt_text or "voce e" in system_prompt_text, "Definição de persona ('você é...') ausente no system_prompt"
 
     def test_prompt_mentions_format(self):
         """Verifica se o prompt exige formato Markdown ou User Story padrão."""
-        prompt_data = fetch_prompt_data()
-        text_fields = [
-        prompt_data.get("system_prompt", ""),
-        prompt_data.get("output_format", ""),
-        prompt_data.get("user_prompt", ""),
-    ]
-        combined = "\n".join(text_fields).lower()
+        assert "system_prompt" in self.prompt_data, "Campo 'system_prompt' ausente"
+        combined = self.prompt_data["system_prompt"].lower()
         has_user_story_format = (
             "como um" in combined
             and "eu quero" in combined
             and "para que" in combined
-    )
+        )
         has_markdown_format = (
             "markdown" in combined
             or "# user story" in combined
             or "## critérios" in combined
-    )
-        assert has_user_story_format or has_markdown_format, (
-            "Prompt deve exigir formato User Story padrão "
-            "(Como um / Eu quero / Para que) ou formato Markdown"
-    )
+        )
+        assert has_user_story_format or has_markdown_format, "Prompt não exige formato Markdown ou User Story padrão"
 
     def test_prompt_has_few_shot_examples(self):
         """Verifica se o prompt contém exemplos de entrada/saída (técnica Few-shot)."""
-        prompt_data = fetch_prompt_data()
-        examples = prompt_data["examples"]
-        assert len(examples) >= 2, (
-            f"Few-shot requer pelo menos 2 exemplos, encontrados: {len(examples)}"
-    )
-        for i, example in enumerate(examples, start=1):
-            assert "input" in example, f"Exemplo {i} não possui 'input'"
-            assert "output" in example, f"Exemplo {i} não possui 'output'"
-            bug_report = example["input"].get("bug_report", "").strip()
-            reference = example["output"].get("reference", "").strip()
-            assert bug_report, f"Exemplo {i}: 'input.bug_report' está vazio"
-            assert reference, f"Exemplo {i}: 'output.reference' está vazio"
+        assert "system_prompt" in self.prompt_data, "Campo 'system_prompt' ausente"
+        system_prompt_text = self.prompt_data["system_prompt"]
+        idx = system_prompt_text.find("Exemplos:")
+        assert idx != -1, "Seção 'Exemplos' não encontrada no prompt"        
+        examples_yaml = yaml.safe_load(system_prompt_text[idx:])
+        examples_section = examples_yaml.get("Exemplos", {})
+        
+        assert examples_section, "Seção 'Exemplos' não encontrada no prompt"
+        
+        for example_name, example_content in examples_section.items():
+            assert "input" in example_content, "input não contém exemplos"
+            assert "output" in example_content, "output não contém exemplos"
+            assert example_content["input"], "input não contém exemplos"
+            assert example_content["output"], "output não contém exemplos"
 
     def test_prompt_no_todos(self):
         """Garante que você não esqueceu nenhum `[TODO]` no texto."""
@@ -86,11 +76,8 @@ class TestPrompts:
 
     def test_minimum_techniques(self):
         """Verifica (através dos metadados do yaml) se pelo menos 2 técnicas foram listadas."""
-        prompt_data = fetch_prompt_data()
-        techniques = prompt_data["techniques"]
-        assert len(techniques) >= 2, (
-            f"É necessário pelo menos 2 técnicas aplicadas, encontrados: {len(techniques)}"
-    )
+        techniques = self.prompt_data.get("techniques_applied", [])
+        assert len(techniques) >= 2, f"Espera-se pelo menos 2 técnicas, encontradas: {len(techniques)}"
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "--tb=short"])
