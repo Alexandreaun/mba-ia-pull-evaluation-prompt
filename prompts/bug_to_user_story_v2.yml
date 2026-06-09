@@ -228,9 +228,10 @@ user_prompt: |
   Retorne apenas a User Story e os Critérios de Aceitação.
 
   Relato:
-  {bug_report}
+  inputs:
+  {{bug_report}}
 
   Metadados:
-  domain: {domain}
-  type: {type}
-  complexity: {complexity}
+  domain: {{domain}}
+  type: {{type}}
+  complexity: {{complexity}}

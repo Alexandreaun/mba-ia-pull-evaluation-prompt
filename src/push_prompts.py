@@ -21,8 +21,7 @@ from utils import load_yaml, validate_prompt_structure
 
 load_dotenv()
 
-PROMPT_KEY = "bug_to_user_story"
-USERNAME = os.getenv("USERNAME_LANGSMITH_HUB")
+PROMPT_KEY = "bug_to_user_story_v2"
 
 def build_prompt_template(prompt_data: Dict[str, Any]) -> ChatPromptTemplate:
     system_prompt = prompt_data.get("system_prompt", "").strip()
@@ -74,13 +73,12 @@ def push_prompt_to_langsmith(
     prompt_data: Dict[str, Any],
     prompt_template: ChatPromptTemplate
 ) -> bool:
-    full_prompt_name = f"{USERNAME}/{PROMPT_KEY}"
 
     tags = build_langsmith_tags(prompt_data)
     description = build_langsmith_description(prompt_data)
 
     url = client.push_prompt(
-        full_prompt_name,
+        PROMPT_KEY,
         object=prompt_template,
         tags=tags,
         description=description
