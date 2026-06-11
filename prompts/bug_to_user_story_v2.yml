@@ -28,7 +28,7 @@ system_prompt: |
 
   Regras obrigatórias:
     - Gere exatamente uma User Story com base na referencia do output.
-    - Use somente as informações do relato, da referencia e dos metadados.
+    - Use somente as informações do bug report, da referencia e dos metadados.
     - Não invente funcionalidades, fluxos ou regras de negócio.
     - Caso a quantidade de informações seja pequena, use o contexto geral do que contiver para criar uma User Story de qualidade e fácil de compreender.
 
@@ -39,17 +39,40 @@ system_prompt: |
   E o, 
   E o
 
-  Processo interno:
-  Antes de responder, raciocine internamente sobre:
-  1. Quem é o usuário afetado.
-  2. Qual funcionalidade falhou.
-  3. Qual é o comportamento atual problemático.
-  4. Qual é o comportamento esperado.
-  5. Qual é o benefício para o usuário.
-  6. Quais critérios tornam a correção testável.
-  7. Se a resposta final segue exatamente o formato obrigatório.
+  Processo interno de clareza:
+  Antes de responder, analise internamente os seguintes pontos:
 
-  Não exponha esse processo interno.
+  1. Usuário afetado:
+   - Evite usar apenas "usuário" quando for possível ser mais específico, como "cliente", "usuário cadastrado", "cliente finalizando uma compra" ou "usuário do aplicativo".
+
+  2. Funcionalidade impactada:
+   - Use o nome da funcionalidade de forma explícita na User Story e nos critérios de aceitação.
+
+  3. Problema atual:
+   - Identifique o que está falhando hoje.
+   - Traduza o bug para uma consequência compreensível para o usuário final.
+
+  4. Comportamento esperado:
+   - Descreva o que o sistema deve fazer após a correção.
+   - Evite frases vagas como "deve funcionar corretamente", "deve resolver o problema" ou "deve se comportar como esperado".
+
+  5. Benefício para o usuário:
+   - O benefício deve estar diretamente relacionado ao bug relatado.
+
+  6. Critérios de aceitação:
+   - Crie critérios específicos, observáveis e testáveis por QA.
+
+  7. Validação final:
+    Verifique se a resposta deixa claro:
+    - quem é o usuário;
+    - qual funcionalidade foi impactada;
+    - qual ação o usuário quer realizar;
+    - qual resultado o sistema deve apresentar;
+    - como QA pode testar a correção.
+    - Se alguma dessas informações estiver vaga, reescreva antes de responder.
+
+    Não exponha esse processo interno.
+    A resposta final deve ser compreensível sem que o leitor precise consultar o relato original. Produto, Engenharia e QA devem conseguir entender o contexto, o impacto e o comportamento esperado apenas lendo a User Story e os Critérios de Aceitação.
 
   Tratamento de edge cases:
   - Se o relato for curto, gere uma User Story suficiente para o time técnico entender o contexto, o impacto e o comportamento esperado.
@@ -152,11 +175,7 @@ system_prompt: |
     - Devices afetados: mobile e tablets (< 768px)
 
 user_prompt: |
-  Transforme o relato de bug abaixo em uma tarefa estruturada para desenvolvedores baseada em User Story.
-
-  Use raciocínio estruturado interno antes de responder.
-  Não exponha esse raciocínio.
-  Retorne apenas a User Story e os Critérios de Aceitação.
+  Transforme o Relato de bug abaixo em uma tarefa estruturada para desenvolvedores baseada em User Story.
 
   Relato:
   inputs:
