@@ -11,11 +11,10 @@ SIMPLIFICADO: Código mais limpo e direto ao ponto.
 """
 
 import sys
-import os
 from dotenv import load_dotenv
 from langchain_core.prompts.chat import ChatPromptTemplate
 from langsmith import Client
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 from prompt_registry import registry
 from utils import load_yaml, validate_prompt_structure
 
