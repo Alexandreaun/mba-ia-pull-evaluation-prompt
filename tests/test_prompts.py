@@ -2,6 +2,7 @@
 Testes automatizados para validação de prompts.
 """
 from queue import Empty
+import re
 import pytest
 import yaml
 import sys
@@ -54,18 +55,31 @@ class TestPrompts:
         """Verifica se o prompt contém exemplos de entrada/saída (técnica Few-shot)."""
         assert "system_prompt" in self.prompt_data, "Campo 'system_prompt' ausente"
         system_prompt_text = self.prompt_data["system_prompt"]
-        idx = system_prompt_text.find("Exemplos:")
-        assert idx != -1, "Seção 'Exemplos' não encontrada no prompt"        
-        examples_yaml = yaml.safe_load(system_prompt_text[idx:])
-        examples_section = examples_yaml.get("Exemplos", {})
-        
-        assert examples_section, "Seção 'Exemplos' não encontrada no prompt"
-        
-        for example_name, example_content in examples_section.items():
-            assert "input" in example_content, "input não contém exemplos"
-            assert "output" in example_content, "output não contém exemplos"
-            assert example_content["input"], "input não contém exemplos"
-            assert example_content["output"], "output não contém exemplos"
+        idx = system_prompt_text.find("Exemplos Few-Shot:")
+        assert idx != -1, "Seção 'Exemplos Few-Shot' não encontrada no prompt"
+
+        few_shot_section = system_prompt_text[idx:]
+        example_pattern = re.compile(
+            r"(Exemplo\s+\d+\s*-[\s\S]*?)(?=Exemplo\s+\d+\s*-|\Z)"
+        )
+        examples = example_pattern.findall(few_shot_section)
+
+        assert examples, "Nenhum bloco de exemplo few-shot encontrado"
+
+        for example_content in examples:
+            input_match = re.search(
+                r"Input:\s*([\s\S]*?)(?=\n\s*Output:|\Z)",
+                example_content,
+            )
+            output_match = re.search(
+                r"Output:\s*([\s\S]*?)\Z",
+                example_content,
+            )
+
+            assert input_match, "Exemplo few-shot sem seção 'Input:'"
+            assert output_match, "Exemplo few-shot sem seção 'Output:'"
+            assert input_match.group(1).strip(), "Seção 'Input:' vazia em exemplo few-shot"
+            assert output_match.group(1).strip(), "Seção 'Output:' vazia em exemplo few-shot"
 
     def test_prompt_no_todos(self):
         """Garante que você não esqueceu nenhum `[TODO]` no texto."""
