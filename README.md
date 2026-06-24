@@ -72,13 +72,11 @@
    - Link público do seu dashboard do LangSmith mostrando as avaliações:
     https://smith.langchain.com/public/1d8269df-31f4-4181-9b0f-652e8111bd0d/d
 
-   - Screenshots das avaliações com as notas mínimas de 0.8 atingidas:
-    Pasted Graphic.png
-
 
   **Seção "Como Executar"**:
 
   Configurações de Variáveis de ambiente:
+
     No arquivo .env, inserir as variáveis de ambiente:
     LANGSMITH_TRACING=true
     LANGSMITH_ENDPOINT=https://api.smith.langchain.com
