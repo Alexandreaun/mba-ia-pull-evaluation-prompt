@@ -2,6 +2,7 @@
   **Seção "Técnicas Aplicadas (Fase 2)"**:
 
    As técnicas usadas para refatoração do prompt, foram:
+   
     - role_prompting
     - few_shot_learning
     - Chain of Thought (CoT)
