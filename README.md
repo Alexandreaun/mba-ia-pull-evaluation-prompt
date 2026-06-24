@@ -2,7 +2,7 @@
   **Seção "Técnicas Aplicadas (Fase 2)"**:
 
    As técnicas usadas para refatoração do prompt, foram:
-   
+
     - role_prompting
     - few_shot_learning
     - Chain of Thought (CoT)
@@ -90,6 +90,9 @@
     LANGSMITH_API_KEY=YOUR_API_KEY
     LANGSMITH_PROJECT="prompt-optimization-challenge-resolved"
     OPENAI_API_KEY=YOUR_OPENAI_KEY
+    LLM_PROVIDER=openai
+    LLM_MODEL=gpt-4o-mini
+    EVAL_MODEL=gpt-4o
 
   Rodar projeto:
 
@@ -110,11 +113,11 @@
 
   **Evidências no LangSmith**:
 
-     - Dataset de avaliação com 15 exemplos
+    - Dataset de avaliação com 15 exemplos:
     https://smith.langchain.com/public/1d8269df-31f4-4181-9b0f-652e8111bd0d/d/compare?selectedSessions=581caf58-8778-42dd-b9ab-ffb97dbe49b1
 
-     - Execuções dos prompts v2 (otimizados) com notas ≥ 0.8:
-     https://smith.langchain.com/public/1d8269df-31f4-4181-9b0f-652e8111bd0d/d
+    - Execuções dos prompts v2 (otimizados) com notas ≥ 0.8:
+    https://smith.langchain.com/public/1d8269df-31f4-4181-9b0f-652e8111bd0d/d
 
     - Tracing detalhado de pelo menos 3 exemplos:
     https://smith.langchain.com/public/1200117a-54f6-49e8-a44c-92b519ebc42b/r
