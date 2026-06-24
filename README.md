@@ -7,11 +7,17 @@
     - Chain of Thought (CoT)
 
    Justificativa de por que escolheu cada técnica:
-      *Role prompting: Utilizei para definição de persona e contexto detalhado das funções que o modelo irá interpretar, utilizando esta técnica fica mais claro para o modelo executar somente as funções que são pertinentes a este papel.
-      *Few_shot_learning: Neste contexto, dando exemplos, ajuda o modelo a manter o mesmo padrão de saída para todos os casos do dataset.
-      *Chain of Thought (CoT): utilizei para forçar o modelo a decidir melhor antes de escrever a User Story, no caso é um raciocínio estruturado interno que pedi para não expor o raciocínio neste caso.
+
+      Role prompting: 
+      Utilizei para definição de persona e contexto detalhado das funções que o modelo irá interpretar, utilizando esta técnica fica mais claro para o modelo executar somente as funções que são pertinentes a este papel.
+      
+      Few_shot_learning: 
+      Neste contexto, dando exemplos, ajuda o modelo a manter o mesmo padrão de saída para todos os casos do dataset.
+      
+      Chain of Thought (CoT): 
+      Utilizei para forçar o modelo a decidir melhor antes de escrever a User Story, no caso é um raciocínio estruturado interno que pedi para não expor o raciocínio neste caso.
    
-   - Exemplos práticos de como aplicou cada técnica:
+  Exemplos práticos de como aplicou cada técnica:
     Conforme o prompt v2, abaixo seguem trechos de exemplos práticos das técnicas aplicadas:
 
     Role_prompting:
