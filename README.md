@@ -5,7 +5,7 @@
 
     - role_prompting
     - few_shot_learning
-    - Chain of Thought (CoT)
+    - Chain of Thought (CoT) (structured_internal_reasoning)
 
    Justificativa de por que escolheu cada técnica:
 
@@ -82,9 +82,17 @@
 
   **Seção "Como Executar"**:
 
+  Instalar o ambiente virtual e dependências:
+
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install openevals
+    pip install langsmith langchain langchain-core langchain-openai python-dotenv
+    pip freeze > requirements.txt
+
   Configurações de Variáveis de ambiente:
 
-    No arquivo .env, inserir as variáveis de ambiente:
+    Em .env, inserir as variáveis de ambiente:
     LANGSMITH_TRACING=true
     LANGSMITH_ENDPOINT=https://api.smith.langchain.com
     LANGSMITH_API_KEY=YOUR_API_KEY
@@ -102,7 +110,7 @@
     python3 datasets/upload_dataset.py
 
     Execute os testes e verifique se o prompt atende todos os requisitos necessários:
-    pytest tests/test_prompts.py  
+    pytest tests/test_prompts.py
 
     Faça push do prompt otimizado para o langsmith:
     python3 src/push_prompts.py
